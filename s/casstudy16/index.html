@@ -1,0 +1,799 @@
+<!doctype html>
+<!-- based on Google HTML5 slide template(http://code.google.com/p/html5slides/) -->
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>第16回Cassandra勉強会 - CQL -</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!--<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Inconsolata">-->
+    <style>
+    body {
+      background: url(cassandra.png) bottom right no-repeat;
+    }
+    .subtitle {
+      font-size: smaller;
+      margin-top: 0.5em;
+      display: block;
+    }
+    </style>
+    <script src="../js/prettify.js"></script>
+    <script src="../js/lang-sql.js"></script>
+    <script src="../js/slides.js"></script>
+  </head>
+  <body style="display: none">
+    <section class="slides layout-regular template-default">
+
+      <article>
+        <h1>CQL</h1>
+        <span class="subtitle">第16回Cassandra勉強会</span>
+        <p>
+          Yuki Morishita (@yukim)
+        </p>
+      </article>
+
+      <article>
+        <h1>Contents</h1>
+        <ul>
+        	<li>Part I: CQLを知る</li>
+        	<li>Part II: CQLを試す</li>
+        	<li>Part III: CQLでアプリを書く</li>
+        </ul>
+      </article>
+
+      <article>
+      	<h2>Part I: CQLを知る</h2>
+      </article>
+
+      <article>
+      	<h2>CQL?</h2>
+      </article>
+
+      <article>
+        <h1><!-- place holder --></h1>
+        <q>
+        <b>Cassandra Query Language</b>
+        </q>
+        <p>
+        v0.8.0から利用できるSQLライクな問い合わせ言語
+        </p>
+      </article>
+
+      <article class="smaller">
+        <h3>Cassandraのデータアクセス方法</h3>
+        <p>
+        <div class="build">
+          <ul>
+          	<li>Thrift API</li>
+          	<li>Hector (Java)</li>
+          	<li>Pycassa (Python)</li>
+            <li>...</li>
+          </ul>
+          <div>+ Cassandra Query Language</div>
+        </div>
+      </article>
+
+      <article class="smaller">
+        <h3>CQL</h3>
+        <p>
+        Cassandra内のデータへのアクセスを、RPC(Thrift API)よりも分かりやすく、かつバージョンが上がっても安定して行えることを目的として開発中。<br>
+        極力SQL標準の文法に準拠するよう仕様が策定されています。
+        </p>
+        <p>
+        例えば
+        </p>
+        <section>
+        <pre class="lang-sql">
+SELECT * FROM Standard1 WHERE KEY=1
+</pre>
+        </section>
+        <p>
+        というクエリを投げることで、<code>Standard1</code> カラムファミリーからキーが1のカラムすべてを取得することができます。
+        </p>
+        <p>
+        その実態はThrift APIのシンタックスシュガーといえるでしょう。
+        </p>
+      </article>
+
+      <article class="smaller">
+        <h3>ドキュメントは?</h3>
+        <p><a href="http://www.datastax.com/docs/0.8/api/cql_ref" target="_blank">DataStaxのサイト</a>にあります。</p>
+        <p>
+        仕様書はソースコードのtarball中に入っています。
+        <pre class="noprettyprint">
+apache-cassandra-0.8.0-xxx-src/docs/cql/CQL.textile
+</pre>
+        <p>
+        ただしすべてを網羅しているわけではないので現段階ではソースを見たほうが確実です。
+        </p>
+        <pre class="noprettyprint">
+apache-cassandra-0.8.0-xxx-src/src/org/apache/cassandra/cql/Cql.g
+</pre>
+        </p>
+      </article>
+
+      <article class="smaller">
+      	<h3>CQLのメリット</h3>
+      	<ul>
+      		<li>Thriftやクライアントライブラリを用いたプログラムを書かなくてもCassandraに保存している値の取得・更新やスキーマ操作ができる。</li>
+      		<li>SQLに似ているので各種言語のRDBドライバー仕様(Javaで言えばJDBC)に準拠しやすく、既存のツール・フレームワークと容易に連携できるようになる(と期待される)。</li>
+      		<li>言語仕様として独立しているのでThrift APIのインターフェースの変更にあまり影響を受けなくなる。</li>
+      	</ul>
+      </article>
+
+      <article class="smaller">
+      	<h3>クエリの種類(CQL v1.0)</h3>
+        <h4>データ定義系</h4>
+        <ul>
+        	<li>CREATE/DROP KEYSPACE</li>
+        	<li>CREATE/DROP COLUMN FAMILY</li>
+        	<li>CREATE INDEX (DROPはまだ)</li>
+        </ul>
+      	<h4>データ操作系</h4>
+        <ul>
+        	<li>SELECT</li>
+        	<li>UPDATE/INSERT</li>
+        	<li>DELETE</li>
+            <li>TRUNCATE</li>
+        </ul>
+      </article>
+
+      <article class="smaller">
+      	<h4>Cassandra特有の操作</h4>
+        <ul>
+          <li>USE</li>
+          <li>BEGIN BATCH ... APPLY BATCH</li>
+        </ul>
+      </article>
+
+      <article class="smaller">
+      	<h3>ロードマップ</h3>
+      	<p>v0.8.0以降のリリースで対応が予定されている機能</p>
+      	<ul>
+      		<li>ALTER文</li>
+      		<li>Prepared Statement(現時点では擬似的にクライアント側で行っている)</li>
+      		<li>カウンタ、複合カラム(Compound Column)のサポート</li>
+            <li>Thriftではない独自のトランスポート/プロトコル</li>
+      	</ul>
+        <p>
+        などなど。詳細は<a href="https://issues.apache.org/jira/browse/CASSANDRA-2472" target="_blank">[CASSANDRA-2472]</a>にCQL v1.1へのTODOがあります。
+        </p>
+      </article>
+
+      <article class="smaller">
+        <h2>CQLの文法を見ていきましょう。</h2>
+      </article>
+
+      <article class="smaller">
+        <h3>CREATE/DROP KEYSPACE</h3>
+        <p><code>CREATE KEYSPACE</code>を利用してキースペースを新しく作ります。</p>
+        <section>
+        <pre class="lang-sql">
+CREATE KEYSPACE
+  &lt;KS&gt;
+WITH
+  strategy_class = &lt;STRATEGY&gt;
+[AND strategy_options:&lt;OPTION&gt; = &lt;VALUE&gt;
+[AND strategy_options:&lt;OPTION&gt; = &lt;VALUE&gt;]]
+</pre>
+        </section>
+        <p><code>strategy_class</code>にレプリケーション戦略クラス、<code>strategy_options</code>にそのクラスが必要とするオプションを記述します。</p>
+        <p><code>DROP KEYSPACE</code>でキースペースを削除できます。</p>
+        <section>
+        <pre class="lang-sql">
+DROP KEYSPACE &lt;KS&gt;
+</pre>
+        </section>
+      </article>
+
+      <article class="smaller">
+        <h3>CREATE/DROP KEYSPACE</h3>
+        <p>例えばレプリケーション戦略をSimpleStrategy、レプリケーション数3のKeyspace1キースペースを作成するには</p>
+        <section>
+        <pre class="lang-sql">
+CREATE KEYSPACE
+  Keyspace1
+WITH
+  strategy_class = 'SimpleStrategy'
+AND strategy_options:replication_factor = 3
+</pre>
+        </section>
+        <p>
+        とします。
+        </p>
+        <p><code>strategy_class</code>は必須です。ここに各レプリケーション戦略のクラス名を記述します。
+        デフォルトで用意されているクラス(<code>org.apache.cassandra.locator</code>パッケージ内のクラス)はクラス名のみでOKですが、自分でカスタマイズした場合はパッケージも必要です。
+        </p>
+        <p>
+        <code>strategy_options</code>は、指定した<code>strategy_class</code>のオプションを指定します。例えば<code>SimpleStrategy</code>の場合、必須項目である<code>replication_factor</code>を指定します。
+        </p>
+      </article>
+
+      <article class="smaller">
+        <h3>CREATE/DROP COLUMNFAMILY</h3>
+        <p>カラムファミリーを作成するにはCREATE COLUMN FAMILYを使います。</p>
+        <section>
+        <pre class="lang-sql">
+CREATE COLUMNFAMILY &lt;CF&gt;
+(
+  KEY &lt;type&gt; PRIMARY KEY
+  [, &lt;col&gt; &lt;type&gt;]
+  ...
+)
+[WITH &lt;key&gt; = &lt;val&gt;[, &lt;key&gt; = &lt;val&gt;]]
+</pre>
+        </section>
+        <p>カラムファミリーを作成する際、必ずキーの種類(Key Comparator)を指定します。必須ではありませんが、各カラムのデータ種別(Validator)も指定できます。</p>
+        <p>WITH以降にカラムファミリーのオプション(コメントなど)を指定することができます。</p>
+        <p><code>DROP COLUMNFAMILY</code>でカラムファミリーを削除できます。</p>
+        <section>
+        <pre class="lang-sql">
+DROP COLUMNFAMILY &lt;CF&gt;
+</pre>
+        </section>
+      </article>
+
+      <article class="smaller">
+        <h3>CREATE INDEX</h3>
+        <p>指定したカラムファミリーのカラムに対してセカンダリインデックスを作成します。</p>
+        <section>
+        <pre class="lang-sql">
+CREATE INDEX
+  [&lt;INDEX_NAME&gt;]
+ON
+  &lt;CF&gt;
+(
+  &lt;column&gt;
+)
+</pre>
+        </section>
+      </article>
+
+      <article class="smaller">
+        <h3>SELECT</h3>
+        <p>
+        SELECT文の基本的な文法は以下のように定義されています。
+        <section>
+        <pre class="lang-sql">
+SELECT
+  [FIRST N] [REVERSED] &lt;カラム指定&gt;
+FROM
+  &lt;CF&gt;
+[USING CONSISTENCY &lt;CL&gt;]
+[WHERE &lt;WHERE句&gt;]
+[LIMIT N];
+</pre>
+        </section>
+      </article>
+
+      <article class="smaller">
+        <h3>SELECT</h3>
+        <h4>カラムの指定</h4>
+        <p>以下のようにSQLのようにカラム名をカンマ(,)で区切って並べることももちろん可能</p>
+        <section>
+        <pre class="lang-sql">
+SELECT
+  col1, col2, col3
+FROM
+  ColumnFamily
+</pre>
+        </section>
+        <p>ですが、範囲指定を行うこともできます.</p>
+        <section>
+        <pre class="lang-sql">
+SELECT
+  col1..col3
+FROM
+  ColumnFamily
+</pre>
+        </section>
+      </article>
+
+      <article class="smaller">
+        <h3>SELECT</h3>
+        <p>SQLと同じように<code>*</code>も利用可能です。</p>
+        <section>
+        <pre class="lang-sql">
+SELECT
+  *
+FROM
+  ColumnFamily
+</pre>
+        </section>
+        <h4>COUNT</h4>
+        <p>
+        SQLと違って、あるRowに含まれるカラム数を数えます。したがってWHERE句でKEYを指定する必要があります。
+        </p>
+        <section>
+        <pre class="lang-sql">
+SELECT
+  COUNT(*)
+FROM
+  ColumnFamily
+WHERE KEY = 1
+</pre>
+        </section>
+      </article>
+
+      <article class="smaller">
+        <h3>SELECT</h3>
+        <h4>FIRST N</h4>
+        <p>
+        最初のN個のカラムのみ取得します。
+        <section>
+        <pre class="lang-sql">
+SELECT FIRST 1 * FROM CF1
+</pre>
+        </section>
+        <h4>REVERSED</h4>
+        <p>
+        カラムを逆順に取得します。
+        </p>
+        <section>
+        <pre class="lang-sql">
+SELECT REVERSED * FROM CF1
+</pre>
+        </section>
+      </article>
+
+      <article class="smaller">
+        <h4>USING CONSISTENCY</h4>
+        <p>
+        一貫性レベル(Consistency Level)を指定するために利用します。例えば一貫性レベルALLで問い合わせをしたい場合、
+        </p>
+        <section>
+        <pre class="lang-sql">
+SELECT * FROM CF USING CONSISTENCY ALL
+</pre>
+        </section>
+        <p>
+        とします。指定がなければデフォルトでは ONE になります。
+        </p>
+      </article>
+
+      <article class="smaller">
+        <h3>SELECT</h3>
+        <h4>WHERE句</h4>
+        <p>
+        選択するRowを指定するには<code>KEY</code>キーワードを利用します。
+        </p>
+        <section>
+        <pre class="lang-sql">
+SELECT * FROM CF1 WHERE KEY = 1
+</pre>
+        </section>
+        <p>
+        セカンダリインデックスを作成している場合、そのカラムをWHERE句に指定できます。
+        <section>
+        <pre class="lang-sql">
+SELECT * FROM CF1 WHERE col = 'xxx'
+SELECT * FROM CF1 WHERE age > 20
+</pre>
+        </section>
+
+        <h4>LIMIT</h4>
+        <p>
+        何行取得するかを指定します。<code>LIMIT</code>句に指定がない場合でも取得する数には自動的にLIMITがかかります(10,000)
+        </p>
+      </article>
+
+      <article class="smaller">
+    	<h3>UPDATE/INSERT</h3>
+        <p>
+        実は記述方法が違うだけで<code>UPDATE</code>も<code>INSERT</code>も処理は同じです。
+        </p>
+        <p>
+        当初は<code>INSERT</code>は存在しませんでしたが、極力SQLに近づけるよう<code>UPDATE</code>のエイリアスとして定義されました。
+        </p>
+      </article>
+
+      <article class="smaller">
+    	<h3>UPDATE/INSERT</h3>
+    	<h4>UPDATE</h4>
+        <section>
+        <pre class="lang-sql">
+UPDATE
+  &lt;CF&gt;
+[USING CONSISTENCY &lt;CL&gt;]
+SET
+  &lt;column&gt; = &lt;value&gt;
+  [, &lt;column&gt; = &lt;value&gt;]
+WHERE KEY = &lt;key&gt;
+</pre>
+        </section>
+        <p>
+        <code>KEY</code>で指定したRowがあればそのRowのカラムを更新・追加。なければ新しくRowが作成されます。
+        </p>
+      </article>
+
+      <article class="smaller">
+    	<h3>UPDATE/INSERT</h3>
+    	<h4>INSERT</h4>
+        <section>
+        <pre class="lang-sql">
+INSERT INTO &lt;CF&gt; (
+  KEY, &lt;column&gt;[, &lt;column&gt;]
+) VALUES (
+  &lt;key&gt;, &lt;value&gt;[, &lt;value&gt;]
+)
+[USING CONSISTENCY &lt;CL&gt;]
+</pre>
+        </section>
+        <p><code>UPDATE</code> のエイリアスなので、<code>KEY</code> が重複しても一意制約違反にはならず、カラムの値が更新されます。</p>
+      </article>
+
+      <article class="smaller">
+    	<h3>DELETE</h3>
+        <p>
+        指定したキーのRowのカラムを削除します。 カラムの指定がない場合はすべてのカラムを削除します。
+        </p>
+        <section>
+        <pre class="lang-sql">
+DELETE
+  [&lt;column&gt;[, &lt;column&gt;]]
+FROM
+  &lt;CF&gt;
+[USING CONSISTENCY &lt;CL&gt;]
+WHERE
+  KEY = key
+</pre>
+        </section>
+    	<p>IN句を用いて複数のキーも指定可能です.</p>
+        <section>
+        <pre class="lang-sql">
+DELETE
+  [&lt;column&gt;[, &lt;column&gt;]]
+FROM
+  &lt;CF&gt;
+[USING CONSISTENCY &lt;CL&gt;]
+WHERE
+  KEY IN (&lt;key&gt;[, &lt;key&gt;])
+</pre>
+        </section>
+      </article>
+
+      <article class="smaller">
+    	<h3>TRUNCATE</h3>
+        <p>Thrift APIの <code>truncate</code> に対応します。</p>
+        <section>
+        <pre class="lang-sql">
+TRUNCATE &lt;CF&gt;
+</pre>
+        </section>
+      </article>
+
+      <article class="smaller">
+        <h3>USE</h3>
+        <p>クエリ発行対象のキースペースを指定します。SELECT等を実行する前に指定する必要があります。</p>
+        <section>
+        <pre class="lang-sql">
+USE &lt;KS&gt;
+</pre>
+        </section>
+      </article>
+
+      <article class="smaller">
+        <h3>BATCH</h3>
+        <p>
+        Thrift APIの <code>batch_mutate</code> に対応した文法です。
+        </p>
+        <section>
+        <pre class="lang-sql">
+BEGIN BATCH [USING CONSISTENCY &lt;CL&gt;]
+    UPDATE CF1 SET name1 = value1, name2 = value2 WHERE KEY = key1;
+    UPDATE CF1 SET name3 = value3 WHERE KEY = keyname2;
+    UPDATE CF2 SET name4 = value4, name5 = value5 WHERE KEY = key3;
+APPLY BATCH
+</pre>
+        </section>
+        <p>
+        <code>BEGIN BATCH ... APPLY BATCH</code> の間にUPDATE/INSERT/DELETE文を複数記述できます(できるようになります...<a href="https://issues.apache.org/jira/browse/CASSANDRA-2537" target="_blank">[CASSANDRA-2537]</a>)。
+        </p>
+      </article>
+
+      <article>
+        <h2>Part II: CQLを試す</h2>
+      </article>
+    
+      <article class="smaller">
+        <h3>CQLの実行環境</h3>
+        <p>
+        CQLを手軽に実行できる環境として <code>cqlsh</code> がPythonドライバーと一緒に配布されています。<br>
+        </p>
+        <h4>事前準備</h4>
+        <p>Python &amp; Thrift</p>
+        <h4>セットアップ</h4>
+        <p>
+        <ol>
+          <li>
+            Cassandraの<a href="http://cassandra.apache.org/download/">ダウンロードページ</a>からPythonのCQLドライバーをダウンロード
+          </li>
+          <li>適当なディレクトリ($CQL_HOME)に展開</li>
+          <li>
+          $CQL_HOME/cqlsh を実行
+          </li>
+        </ol>
+        </p>
+      </article>
+
+      <article class="smaller">
+        <h4>実行</h4>
+        <p>
+        そのまま引数なしで実行すると、localhost:9160に接続しようとします。
+        </p>
+        <pre>
+> ./cqlsh
+</pre>
+        <p>
+        接続先の指定は引数で行います。
+        </p>
+        <pre>
+使い方: cqlsh [ホスト [ポート番号]]
+
+オプション:
+  -h, --help            このヘルプを表示します。
+  -C, --color           結果を色付きで出力します。
+  -u USERNAME, --username=USERNAME
+                        認証するユーザーを指定します。
+  -p PASSWORD, --password=PASSWORD
+                        認証に使用するパスワードを指定します。
+</pre>
+        </p>
+      </article>
+
+      <article class="nobackground smaller">
+        <h4>ブラウザから試す</h4>
+        <p><a href="http://caqel.deadcafe.org" target="_blank">Caqel</a></p>
+        <iframe src="http://caqel.deadcafe.org"></iframe>
+      </article>
+
+      <article class="smaller">
+        <h3>既存のツールは使えるか? (Java編)</h3>
+        <p>
+        JDBCドライバが提供されているので、RDB用のEclipse Database Tools Platformで試してみました。
+        </p>
+        <div class="build">
+          <p class="red" style="margin-top:1em">結果はNG</p>
+          <div style="text-align:center">
+          <img src="dtp_err.png" alt="Eclipse DTP error message">
+          </div>
+          <p>
+          UnsuportedOperationException...
+          </p>
+        </div>
+      </article>
+
+      <article>
+        <h2>Part III: CQLでアプリを書く</h2>
+      </article>
+
+      <article class="smaller">
+      	<h3>JDBCドライバでWebアプリを作ってみる</h3>
+        <p>
+        Servletコンテナが管理するデータソースから、JDBCのインターフェースのみを用いてCassandraへ接続してみます。<br>
+        ServletコンテナにはJetty、データソースはCommon DBCPを利用します。
+        </p>
+        <p>
+        ソースコードはgithub上に <a href="https://github.com/yukim/cql-testdrive/" target="_blank">公開</a> しています。
+        </p>
+      </article>
+
+      <article class="smaller">
+        <h4>データソースの設定</h4>
+        <p>
+        jetty-env.xml にデータソースの設定を記述します。
+        通常のJDBCと同じ用にドライバクラス名とURLを指定します。
+        これで Servlet の <code>@Resource</code> で取得できるようなります。
+        </p>
+        <section>
+        <pre>
+&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd"&gt;
+&lt;Configure class="org.eclipse.jetty.webapp.WebAppContext"&gt;
+  &lt;New id="keyspace1" class="org.eclipse.jetty.plus.jndi.Resource"&gt;
+    &lt;Arg&gt;jdbc/testdrive&lt;/Arg&gt;
+    &lt;Arg&gt;
+      &lt;New class="org.apache.commons.dbcp.BasicDataSource"&gt;
+        &lt;Set name="driverClassName"&gt;org.apache.cassandra.cql.jdbc.CassandraDriver&lt;/Set&gt;
+        &lt;Set name="url"&gt;jdbc:cassandra:dummy/dummmy@localhost:9160/Keyspace1&lt;/Set&gt;
+      &lt;/New&gt;
+    &lt;/Arg&gt;
+  &lt;/New&gt;
+&lt;/Configure&gt;
+</pre>
+        </section>
+      </article>
+
+      <article class="smaller">
+      	<h3>JDBCドライバでWebアプリを作ってみる</h3>
+        <h4>JDBCドライバのパラメータ</h4>
+        <p>
+        ドライバクラス名は <code>org.apache.cassandra.cql.jdbc.CassandraDriver</code>。
+        </p>
+        <p>
+        JDBC URLの記述ルールは
+        <table>
+          <tr>
+            <th>jdbc:cassandra:</th>
+            <td>Cassandraへの接続を表します。</td>
+          </tr>
+          <tr>
+          	<th>dummy/dummy</th>
+          	<td>ユーザー名/パスワード。接続するキースペースにアクセスするユーザ情報です。現時点では<b>省略不可!</b></td>
+          </tr>
+          <tr>
+          	<th>@localhost:9160</th>
+          	<td>@ホスト:ポート。接続するCassandraのホスト名とポート番号です。</td>
+          </tr>
+          <tr>
+          	<th>/Keyspace1</th>
+          	<td>/接続するキースペース。接続が確立されたあと、JDBCドライバはこの情報を下に<code>USE</code>文を発行し、利用するキースペースを固定します。</td>
+          </tr>
+        </table>
+        </p>
+      </article>
+
+      <article class="smaller">
+      	<h3>JDBCドライバでWebアプリを作ってみる</h3>
+        <p>
+        次にServletを記述します.
+        </p>
+        <section>
+        <pre>
+@WebServlet("/cql")
+public class CqlServlet extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
+
+    @Resource(name="jdbc/testdrive")
+    private DataSource ds;
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+            ...
+    }
+}
+</pre>
+        </section>
+      </article>
+
+      <article class="smaller">
+      	<h3>JDBCドライバでWebアプリを作ってみる</h3>
+        <p>
+        ResultSetからデータを取得する部分です。
+        </p>
+        <section>
+        <pre>
+Connection conn = null;
+Statement stmt = null;
+ResultSet rs = null;
+try {
+    conn = ds.getConnection();
+    stmt = conn.createStatement();
+    String query = ...;
+    if (query.toLowerCase().startsWith("select")) {
+        rs = stmt.executeQuery(query);
+        ...
+        if (rs != null) {
+            ResultSetMetaData meta = rs.getMetaData();
+            rs.next(); // we need this before accessing metadata
+            int count = meta.getColumnCount();
+            ...
+            do {
+                count = meta.getColumnCount();
+                for (int i = 1; i &lt;= count; i++) {
+                    Object val = rs.getObject(i);
+                    ...
+                }
+            } while (rs.next());
+            ...
+        }
+    } ...
+} catch (...) { ... }
+</pre>
+        </section>
+      </article>
+
+      <article class="smaller">
+      	<h3>JDBCドライバでWebアプリを作ってみる</h3>
+        <p>エラー...</p>
+        <pre class="noprettyprint">
+Cannot locate cassandra.yaml
+Fatal configuration error; unable to start server.  See log for stacktrace.
+</pre>
+        <p>
+        cassandra.yamlの場所を指定しないといけないらしい...(正式リリース時には解消される - <a href="https://issues.apache.org/jira/browse/CASSANDRA-2694" target="_blank">[CASSANDRA-2694]</a>)
+        </p>
+        <pre class="noprettyprint">
+-Dcassandra.config=file:///path/to/cassandra.yaml
+</pre>
+        <p>
+        で渡してやると...
+        </p>
+      </article>
+
+      <article class="smaller">
+      	<h3>JDBCドライバでWebアプリを作ってみる</h3>
+        <p>エラー...</p>
+        <pre class="noprettyprint">
+java.lang.UnsupportedOperationException: method not supported
+	at org.apache.cassandra.cql.jdbc.CassandraConnection.getAutoCommit(CassandraConnection.java:284)
+	at org.apache.commons.dbcp.DelegatingConnection.getAutoCommit(DelegatingConnection.java:337)
+	at org.apache.commons.dbcp.PoolableConnectionFactory.activateObject(PoolableConnectionFactory.java:703)
+	at org.apache.commons.dbcp.BasicDataSource.validateConnectionFactory(BasicDataSource.java:1557)
+	at org.apache.commons.dbcp.BasicDataSource.createPoolableConnectionFactory(BasicDataSource.java:1545)
+	at org.apache.commons.dbcp.BasicDataSource.createDataSource(BasicDataSource.java:1388)
+	at org.apache.commons.dbcp.BasicDataSource.getConnection(BasicDataSource.java:1044)
+</pre>
+        <p>また<code>UnsupportedOperationException</code>ですか。</p>
+      </article>
+
+      <article class="smaller">
+      	<h3>JDBCドライバでWebアプリを作ってみる</h3>
+        <p>CassandraConnectionのソースを見てみる</p>
+        <pre>
+...
+    /**
+     * @return
+     * @throws SQLException
+     */
+    public boolean getAutoCommit() throws SQLException
+    {
+        throw new UnsupportedOperationException("method not supported");
+    }
+
+    /**
+     * @return
+     * @throws SQLException
+     */
+    public String getCatalog() throws SQLException
+    {
+        throw new UnsupportedOperationException("method not supported");
+    }
+...
+        </pre>
+      </article>
+
+      <article class="smaller">
+      	<h3>JDBCドライバでWebアプリを作ってみる</h3>
+        <p>JDBCドライバ修正</p>
+        <pre class="noprettyprint">
+--- a/drivers/java/src/org/apache/cassandra/cql/jdbc/CassandraConnection.java
++++ b/drivers/java/src/org/apache/cassandra/cql/jdbc/CassandraConnection.java
+@@ -150,7 +150,7 @@ class CassandraConnection implements Connection
+      */
+     public void clearWarnings() throws SQLException
+     {
+-        throw new UnsupportedOperationException("method not supported");
++        // noop
+     }
+ 
+     /**
+@@ -281,7 +281,7 @@ class CassandraConnection implements Connection
+      */
+     public boolean getAutoCommit() throws SQLException
+     {
+-        throw new UnsupportedOperationException("method not supported");
++        return true;
+     }
+</pre>
+      </article>
+
+      <article class="smaller">
+      	<h3>まとめ</h3>
+        <ul>
+          <li>CQLによりThrift APIより簡単にデータにアクセスできるようになりそうです。</li>
+          <li>ただしドキュメントも実装もテストもまだまだたりません。</li>
+          <li>各種ドライバがすでにありますが、お試しの位置づけ。JDBCドライバは使うには厳しいかな...</li>
+        </ul>
+      </article>
+      
+      <article>
+        <h1>
+          Question?
+        </h1>
+      </article>
+
+    </section>
+  </body>
+</html>
