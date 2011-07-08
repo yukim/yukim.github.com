@@ -1,0 +1,200 @@
+<!doctype html>
+<!-- based on Google HTML5 slide template(http://code.google.com/p/html5slides/) -->
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>第1回分散処理ワークショップ in Tokyo - Cassandra -</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!--<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Inconsolata">-->
+    <style>
+    body {
+      background: url(cassandra.png) bottom right no-repeat;
+    }
+    .subtitle {
+      font-size: smaller;
+      margin-top: 0.5em;
+      display: block;
+    }
+    </style>
+    <script src="../js/prettify.js"></script>
+    <script src="../js/lang-sql.js"></script>
+    <script src="../js/slides.js"></script>
+  </head>
+  <body style="display: none">
+    <section class="slides layout-regular template-default">
+
+      <article>
+        <h1>Apache Cassandra</h1>
+        <span class="subtitle">第1回分散処理ワークショップ in Tokyo (Jul. 8, 2011)</span>
+        <p>
+          Yuki Morishita (@yukim)
+        </p>
+      </article>
+
+      <article class="nobackground">
+        <h1>
+          <div style="float:left;margin-left: 2em;"><img src="cassandra.png" alt="logo"></div>
+          <div style="float:left;">= BigTable<br> + Dynamo<br> + (much more!)</div>
+        </h1>
+      </article>
+
+      <article class="smaller">
+        <h3>Cassandraの特徴</h3>
+        <h4>BigTable由来の</h4>
+        <ul>
+          <li>カラム志向データモデル<img src="datamodel.png" alt="data model"></li>
+        </ul>
+      </article>
+
+      <article class="smaller">
+        <h3>Cassandraの特徴</h3>
+        <h4>BigTable由来の</h4>
+        <ul>
+          <li>CommitLog/Memtable/SSTable<img src="readwrite.png" alt="read and write path"></li>
+        </ul>
+      </article>
+
+      <article class="smaller">
+        <h3>Cassandraの特徴</h3>
+        <h4>Dynamo由来の</h4>
+        <ul>
+          <li>P2Pの分散ハッシュテーブル, no SPOF<img src="dht.png" alt="DHT"></li>
+        </ul>
+      </article>
+
+      <article class="smaller">
+        <h3>Cassandraの特徴</h3>
+        <h4>チューニング可能な書き込み/読み込み一貫性レベル</h4>
+        <table>
+          <tbody>
+            <tr><td><tt>ANY</tt></td><td>Writeのみ. 1 replica(HintedHandoff含む)</td></tr> 
+            <tr><td><tt>ONE</tt></td><td>1 replica</td></tr>
+            <tr style="color:lightgray"><td><tt>TWO</tt></td><td>2 replicas</td></tr>
+            <tr style="color:lightgray"><td><tt>THREE</tt></td><td>3 replicas</td></tr>
+            <tr><td><tt>QUORUM</tt></td><td>N / 2 + 1 replicas</td></tr> 
+            <tr><td><tt>LOCAL_QUORUM</tt></td><td>N / 2 + 1 replicas in local <a href="http://www.datastax.com/docs/0.8/operations/datacenter" target="_blank">data center</a></td></tr> 
+            <tr><td><tt>EACH_QUORUM</tt></td><td>N / 2 + 1 replicas in each datacenter</td></tr> 
+            <tr><td><tt>ALL</tt></td><td>all N replicas</td></tr> 
+          </tbody>
+        </table>
+      </article>
+
+      <article class="smaller">
+        <h3>最近のCassandra</h3>
+        <h4>v0.7 (2011年1月リリース)</h4>
+        <ul>
+          <li>動的なスキーマ変更<p>これまではXMLファイルに定義されていました。0.7以降内部の特殊なキースペースにスキーマを保持し、反映にノードの再起動が不要に。</p></li>
+          <li>セカンダリーインデックス<p>定義を行うだけでKEY以外のカラムに自動でセカンダリーインデックスを作成</p></li>
+        </ul>
+        <h4>v0.8 (2011年6月リリース)</h4>
+        <ul>
+          <li>カウンター<p>分散環境で値のインクリメント、デクリメントが可能に。</li>
+          <li>CQL</li>
+        </p>
+      </article>
+
+      <article class="smaller">
+        <h3>CQL</h3>
+        <p>
+        Cassandra内のデータへのアクセスを、RPC(Thrift API)よりも分かりやすく、かつバージョンが上がっても安定して行えることを目的として開発中。<br>
+        極力SQL標準の文法に準拠するよう仕様が策定されています。
+        </p>
+      	<p>CQLのメリット</p>
+      	<ul>
+      		<li>Thriftやクライアントライブラリを用いたプログラムを書かなくてもCassandraに保存している値の取得・更新やスキーマ操作ができる。</li>
+      		<li>SQLに似ているので各種言語のRDBドライバー仕様(Javaで言えばJDBC)に準拠しやすく、既存のツール・フレームワークと容易に連携できるようになる(と期待される)。</li>
+      		<li>言語仕様として独立しているのでThrift APIのインターフェースの変更にあまり影響を受けなくなる。</li>
+      	</ul>
+      </article>
+
+      <article class="smaller">
+      	<h3>クエリの種類(CQL v1.0)</h3>
+        <h5>データ定義系</h5>
+        <ul>
+        	<li>CREATE/DROP KEYSPACE</li>
+        	<li>CREATE/DROP COLUMN FAMILY</li>
+        	<li>CREATE INDEX (DROPはまだ)</li>
+        </ul>
+      	<h5>データ操作系</h5>
+        <ul>
+        	<li>SELECT/UPDATE/INSERT/DELETE</li>
+            <li>TRUNCATE</li>
+        </ul>
+        <h5>その他</h5>
+        <ul>
+          <li>USE</li>
+          <li>BEGIN BATCH ... APPLY BATCH</li>
+        </ul>
+      </article>
+
+      <article class="smaller">
+        <h3>CQL例</h3>
+        <p><code>CREATE KEYSPACE</code>を利用してキースペースを新しく作ります。</p>
+        <section>
+        <pre class="lang-sql">
+CREATE KEYSPACE
+  Keyspace1
+WITH
+  strategy_class = 'SimpleStrategy'
+AND strategy_options:replication_factor = 3
+</pre>
+        </section>
+        <p><code>DROP KEYSPACE</code>でキースペースを削除できます。</p>
+        <section>
+        <pre class="lang-sql">
+DROP KEYSPACE Keyspace1;
+</pre>
+        </section>
+      </article>
+
+      <article class="smaller">
+        <h3>CQL例 - SELECT</h3>
+        <pre class="lang-sql">
+SELECT * FROM CF1 WHERE KEY = 1
+</pre>
+        <p>
+        セカンダリインデックスを作成している場合、そのカラムをWHERE句に指定できます。
+        <section>
+        <pre class="lang-sql">
+SELECT * FROM CF1 WHERE col = 'xxx'
+SELECT * FROM CF1 WHERE age > 20
+</pre>
+        </section>
+      </article>
+
+      <article class="smaller">
+        <h3>その他の機能</h3>
+        <ul>
+          <li>Hadoop MapReduceのサポート</li>
+          <li>AWSのサポート</li>
+          <li>などなど</li>
+        </ul>
+      </article>
+
+      <article class="smaller">
+        <h1>おまけ</h1>
+      </article>
+
+      <article class="nobackground smaller">
+        <h4><a href="http://www.datastax.com/bproducts/brisk" target="_blank">DataStax Brisk</a></h4>
+        <p>HDFSやHive MetaStoreをCassandraで実装</p>
+        <div style="width:340px" id="__ss_8317504">
+          <strong style="display:block;margin:12px 0 4px;"><a href="http://www.slideshare.net/srisatish/brisk-hadoop-june2011sfjava" title="Brisk hadoop june2011_sfjava" target="_blank" style="font-size:16px">Brisk hadoop june2011_sfjava</a></strong>
+          <iframe src="http://www.slideshare.net/slideshow/embed_code/8317504" style="width:340px;height:284px;" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+        </div>
+      </article>
+    </section>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-23375789-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+       })();
+     </script>
+  </body>
+</html>
