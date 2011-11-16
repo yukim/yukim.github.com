@@ -1,0 +1,241 @@
+<!doctype html>
+<!-- based on Google HTML5 slide template(http://code.google.com/p/html5slides/) -->
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>第19回Cassandra勉強会 - CCM -</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!--<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Inconsolata">-->
+    <style>
+    body {
+      background: url(cassandra.png) bottom right no-repeat;
+    }
+    .subtitle {
+      font-size: smaller;
+      margin-top: 0.5em;
+      display: block;
+    }
+    </style>
+    <script src="../js/prettify.js"></script>
+    <script src="../js/slides.js"></script>
+    <script type="text/javascript" src="https://apis.google.com/js/plusone.js">{lang: 'ja'}</script>
+  </head>
+  <body style="display: none">
+    <section class="slides layout-regular template-default">
+
+      <article>
+        <h1>ccm</h1>
+        <span class="subtitle">第19回Cassandra勉強会 (2011/11/16) </span>
+        <p>
+          Yuki Morishita
+        </p>
+        <p><a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="yukim">Tweet</a><script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+        <iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fm7a.me%2Fs%2Fcasstudy19%2F&amp;send=false&amp;layout=button_count&amp;width=100&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:21px;" allowTransparency="true"></iframe>
+        <g:plusone size="medium" href="http://m7a.me/s/casstudy19/"></g:plusone></p>
+      </article>
+
+      <article class="smaller">
+        <h3>自己紹介</h3>
+        <ul>
+          <li>Cassandra Contributor: CASSANDRA-2677, 3316, ...</li>
+          <li><a href="https://twitter.com/yukim" class="twitter-follow-button" data-show-count="false">Follow @yukim</a>
+          <script src="//platform.twitter.com/widgets.js" type="text/javascript"></script></li>
+        </ul>
+      </article>
+
+      <article class="smaller">
+        <h3>こんな時ってありませんか?</h3>
+        <p>テスト用にv1.0.2のCassandraで3ノードのクラスタを開発マシンに作成したい...</p>
+        <p>このパッチを当てたCassandraをローカルのクラスタでテストしたいんだけど...</p>
+      </article>
+
+      <article class="smaller">
+        <h3>そんなときはccm</h3>
+        <p>コマンド1つで複数ノードを追加/起動できたり、</p>
+        <p>ログを確認したり、ストレステストを行ったり、</p>
+        <p>CLI起動したり、コンパクションを実行したり、(略</p>
+      </article>
+
+      <article>
+        <h1>ccm</h1>
+        <p>Cassandra Cluster Manager ... or something</p>
+        <p>
+          <a href="https://github.com/pcmanus/ccm">https://github.com/pcmanus/ccm</a>
+        </p>
+      </article>
+
+      <article class="smaller">
+        <h4>例えば</h4>
+        <p>
+        ローカル上に3ノードのv1.0.2のCassandraクラスタを立てる.
+        </p>
+        <pre class="lang-sh">
+$ ccm create MyCluster -v 1.0.2 # v1.0.2のCassandraクラスタを定義
+$ ccm populate -n 3 # 3ノードをクラスタに追加
+$ ccm start # クラスタ起動
+</pre>
+        <p>
+        以上.
+        </p>
+      </article>
+
+      <article class="smaller">
+      	<h3>インストールは簡単</h3>
+      	<p>pythonが必要です.</p>
+      	<p>また、Cassandraをソースコードからビルドするため、実行時にantが必要になります.</p>
+        <pre class="lang-sh">
+$ git clone git://github.com/pcmanus/ccm.git # ソース取得して...
+$ cd ccm
+$ sudo python setup.py install # インストール!
+</pre>
+      </article>
+
+      <article class="smaller">
+      	<h3>インストールを確認してみる</h3>
+        <pre class="lang-sh">
+$ ccm
+Missing arguments
+Usage:
+  ccm &lt;cluster_cmd&gt; [options]
+  ccm &lt;node_name&gt; &lt;node_cmd&gt; [options]
+
+Where &lt;cluster_cmd&gt; is one of
+  create         Create a new cluster
+  add            Add a new node to the current cluster
+  populate       Add a group of new nodes with default options
+  list           List existing clusters$ ccm
+...
+</pre>
+      </article>
+
+      <article>
+        <h1>DEMO TIME!</h1>
+        <p>3ノードのv1.0.2 Cassandraクラスタを組んでみる</p>
+      </article>
+
+      <article class="smaller">
+      	<h3>クラスタを作成する</h3>
+        <pre class="lang-sh">
+$ ccm create MyCluster -v 1.0.2
+Downloading http://archive.apache.org/dist/cassandra/1.0.2/apache-cassandra-1.0.2-src.tar.gz to /tmp/ccm-nzaVkJ.tar.gz (7.475MB)
+   7837796  [100.00%] 
+Extracting /tmp/ccm-nzaVkJ.tar.gz as version 1.0.2 ...
+Compiling Cassandra 1.0.2 ...
+Current cluster is now: MyCluster
+</pre>
+      	<p>-vオプションでCassandraのバージョンを指定します. その場合、初回だけ、ソースコードがダウンロードされ、ビルドが実行されます.</p>
+        <p>-vオプションをつけない場合、カレントディレクトリにCassandraのソースコードが展開されている必要があります. パッチを当てたりしたCassandraの場合はこちらを利用します.</p>
+      </article>
+
+      <article class="smaller">
+        <h3>クラスタ関連の主な操作</h3>
+        <pre class="lang-sh">
+$ ccm list # クラスタの一覧を表示
+$ ccm switch <other> # 違うクラスタへ切り替え
+$ ccm status # 現在のクラスタ内のノードのステータスを一覧表示
+$ ccm add &lt;node_name&gt; [options] # 現在のクラスタへノードを追加
+$ ccm remove # 現在のクラスタを削除
+</pre>
+      	<p></p>
+      </article>
+
+      <article class="smaller">
+      	<h3>ノードを追加する(1)</h3>
+      	<h4>まずはネットワークの設定</h4>
+      	<p>ローカルに各ノード用のインターフェースを追加します.</p>
+        <pre class="lang-sh">
+# ノード1は127.0.0.1を利用します
+# Mac OS Xの場合 
+$ sudo ifconfig lo0 alias 127.0.0.2 up # ノード2用
+$ sudo ifconfig lo0 alias 127.0.0.3 up # ノード3用
+# Linuxの場合は route add
+</pre>
+      </article>
+
+      <article class="smaller">
+      	<h3>ノードを追加する(2)</h3>
+      	<h4>ノードを自動生成します.</h4>
+      	<p>ローカルに各ノード用のインターフェースを追加します.</p>
+        <pre class="lang-sh">
+$ ccm populate -n 3 # -n オプションでノードの数を指定
+</pre>
+        <p>
+        populateを利用すると簡単にノードを追加できますが、ポート番号やトークンなどが自動的に決まります.
+        細かい制御が必要な場合、<code>ccm add</code>を利用します.
+        </p>
+      </article>
+
+      <article class="smaller">
+      	<h3>クラスタを起動する</h3>
+        <pre class="lang-sh">
+$ ccm start
+</pre>
+      	<p>上記のコマンドでクラスタ内のノードがすべて起動します.</p>
+        <pre class="lang-sh">
+$ ccm node1 start
+</pre>
+      	<p>として、ノードを指定して起動させることもできます.</p>
+      </article>
+
+      <article class="smaller">
+      	<h3>あとはクラスタに対してテストするだけ</h3>
+        <pre class="lang-sh">
+# ストレステスト
+$ ccm stress
+# describe ring
+$ ccm node1 ring
+# cli起動
+$ ccm node1 cli
+</pre>
+      </article>
+
+      <article class="smaller">
+      	<h3>クラスタを停止する</h3>
+        <p>テストが終わったらクラスタを停止します</p>
+        <pre class="lang-sh">
+$ ccm stop
+</pre>
+      	<p>上記のコマンドでクラスタ内のノードがすべて停止します.</p>
+        <pre class="lang-sh">
+$ ccm node1 stop
+</pre>
+      	<p>として、ノードを指定して停止させることもできます.</p>
+      </article>
+
+      <article class="smaller">
+      	<h3>Tips</h3>
+        <ul>
+          <li>ccm関連のファイルは <code>~/.ccm</code>に配置されます.</li>
+          <li><code>ccm node1 setlog DEBUG</code>でログをDEBUGレベルに切り替えられます.(要ノード再起動)</li>
+          <li>すべてのノードのデータとログを削除したい場合、<code>ccm clear</code>が便利です.</li>
+        </ul>
+      </article>
+
+      <article class="smaller">
+      	<h3>まとめ</h3>
+        <ul>
+          <li>ccmを使うとローカルで簡単にCassandraクラスタを作成できるよ!</li>
+          <li>cassandra-cliやnodetoolのコマンドを簡単にクラスタ内のノードに!</li>
+          <li>Patches are Welcome!</li>
+        </ul>
+      </article>
+      
+      <article>
+        <h1>
+          Question?
+        </h1>
+      </article>
+    </section>
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-23375789-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+       })();
+    </script>
+  </body>
+</html>

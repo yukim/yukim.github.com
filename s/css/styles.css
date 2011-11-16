@@ -427,7 +427,7 @@ code {
   color: black;
 }
 
-iframe {
+article > iframe {
   width: 100%;
 
   height: 500px;
