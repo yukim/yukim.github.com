@@ -1,0 +1,14 @@
+exclude: ["CNAME", "README.md", "Gruntfile.js", "*.json", "node_modules", "components", "test"]
+timezone: America/Chicago
+permalink: /blog/:year/:month/:day/:title.html
+paginate: 10
+safe: true
+
+name: m7a.me
+avatar: http://www.gravatar.com/avatar/ffcf9f584fc64efc28d08537123c2fa5
+accounts:
+    twitter: yukim
+    github: yukim
+    linkedin: yuki-morishita/3/3b/831
+    google_analytics: UA-23375789-1
+

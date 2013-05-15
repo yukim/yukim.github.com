@@ -1,15 +1,15 @@
-<!DOCTYPE HTML>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>m7a.me</title>
-</head>
-<body>
-<div>Still working on this site, but here are some contents available.</div>
-<ul>
-  <li>
-  	<a href="/s/casstudy16">CQL</a>(in Japanese) - slides for Apache Cassandra Study Group in Japan
-  </li>
-</ul>
-</body>
-</html>
+---
+layout: default
+title: m7a.me
+---
+{% for post in paginator.posts %}
+<article class="posts">
+  <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+  <span class="date">{{ post.date | date: '%b %d, %Y' }}</span>
+  <div>
+    {{ post.excerpt }} 
+  </div>
+  <a class="continue" href="{{ post.url }}">(continue reading...)</a>
+</article>
+{% endfor %}
+
