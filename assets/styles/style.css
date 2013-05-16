@@ -15,6 +15,12 @@ a:hover {
   text-decoration: underline;
 }
 
+code {
+    padding: 10px;
+    background-color: #fefefe;
+    display: block;
+}
+
 header {
   padding: 0 20px;
   background-color: #fefefe;

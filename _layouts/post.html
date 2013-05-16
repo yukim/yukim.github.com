@@ -1,7 +1,7 @@
 {% include header.html %}
     <article class="post">
       <h2>{{ page.title }}</h2>
-      <div class="date">{{ page.date | date: '%b %d, %Y' }}</div>
+      <div class="date">{{ page.date | date: '%b %d, %Y' }} - {{ page.tags }}</div>
       <div class="content">
         {{ page.content | markdownify }}
       </div>
