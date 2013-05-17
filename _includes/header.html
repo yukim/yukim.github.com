@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@{{ site.accounts.twitter }}">
+  <meta name="twitter:title" content="{{ page.title }}">
+  <meta name="twitter:description" content="{{ page.excerpt | markdownify | strip_html }}">
+  <meta name="twitter:domain" content="m7a.me">
   <link rel="stylesheet" href="/assets/styles/style.css" type="text/css">
   <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet">
   <script src="/assets/scripts/modernizr.min.js"></script>
