@@ -15,10 +15,12 @@ a:hover {
   text-decoration: underline;
 }
 
-code {
+pre > code {
     padding: 10px;
+    width: 600px;
     background-color: #fefefe;
     display: block;
+    overflow: scroll;
 }
 
 header {
@@ -55,8 +57,22 @@ a.icon:hover {
 .layout {
   width: 900px;
   margin: 50px auto;
-  display: flex;
+
+  display: -ms-flexbox;
+  -ms-box-orient: horizontal;
+
   display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: flex;
+}
+
+.no-flexbox .layout {
+  display: -webkit-box;
+  display: -moz-box;
+
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
 }
 
 .main {
@@ -69,8 +85,12 @@ a.icon:hover {
 .author {
   padding: 10px;
   background-color: #fefefe;
-  order: 2;
+
+  -webkit-box-ordinal-group: 2;
+  -moz-box-ordinal-group: 2;
+  -ms-flex-order: 2;
   -webkit-order: 2;
+  order: 2;
 }
 
 .author > ul {
@@ -79,6 +99,13 @@ a.icon:hover {
   width: 100%;
   list-style-type: none;
   padding: 0;
+}
+.no-flexbox .author > ul {
+  display: -webkit-box;
+  display: -moz-box;
+
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
 }
 .author > ul > li {
   width: 33%;
@@ -92,9 +119,9 @@ a.icon:hover {
   background-color: #fff;
   border: solid 3px #fff;
 
-  -webkit-border-radius: 10em;
-  -moz-border-radius: 10em;
-  border-radius: 10em;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;;
 
   -webkit-box-shadow: 0 1px 0 rgba(0,0,0, .2);
   -moz-box-shadow: 0 1px 0 rgba(0,0,0, .2);
@@ -122,4 +149,35 @@ article.posts .continue {
 }
 article.post .content {
   margin-top: 1em;
+}
+
+@media only screen and (max-width: 900px) {
+  .author {
+    display: none;
+  }
+  .layout {
+    width: 100%;
+    margin: auto;
+    -webkit-flex-flow: column;
+    flex-flow: column;
+  }
+  .no-flexbox .layout {
+    display: -webkit-box;
+    display: -moz-box;
+
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+  }
+  header {
+    text-align: left;
+  }
+  header h1 {
+    height: 1.5em;
+  }
+  pre > code {
+    width: 90%;
+  }
+  .main {
+    width: 100%;
+  }
 }
