@@ -33,6 +33,7 @@ module.exports = function (grunt) {
       assets: {
         files: ['_posts/*',
                 '{.,_layouts,_includes}/*.html',
+                's/{,*/}*.{html,css,js}',
                 'assets/styles/{,*/}*.css',
                 'assets/scripts/{,*/}*.js',
                 'assets/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'],
@@ -51,6 +52,13 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-open');
   grunt.loadNpmTasks('grunt-regarde');
   grunt.loadNpmTasks('grunt-jekyll');
+
+  grunt.registerTask('serve', [
+    'livereload-start',
+    'connect',
+    'open',
+    'regarde',
+  ]);
 
   grunt.registerTask('default', [
     'jekyll',

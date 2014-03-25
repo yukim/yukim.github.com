@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>CQL3 - Data modeling</title>
+    <meta name="description" content="CQL3 data modeling slide for Austin JUG 3/25/2014">
+    <meta name="author" content="Yuki Morishita">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/theme/datastax.css" id="theme">
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+    document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+        <section>
+          <div class="bg"></div>
+          <img src="./css/theme/datastax/images/DataStax_Logo_Blue.png">
+          <h1>Introduction to CQL</h1>
+          <h3>Yuki Morishita</h3>
+          <h4>
+            <small>Apache Cassandra Committer / Software Developer @ DataStax</small>
+          </h4>
+          <aside class="notes"></aside>
+        </section>
+
+        <section>
+          <h1 class="section_title">Accessing Data Stored in Apache Cassandra</h1>
+          <aside class="notes"></aside>
+        </section>
+
+        <section>
+          <h2>Thrift RPC API</h2>
+          <p>Cassandra originally went with Thrift for data access.</p>
+          <p>Direct manipulation of Cassandra storage.</p>
+          <pre><code data-trim class="java">
+Column col = new Column(ByteBuffer.wrap("name".getBytes()));
+col.setValue(ByteBuffer.wrap("value".getBytes()));
+col.setTimestamp(System.currentTimeMillis());
+ColumnOrSuperColumn cosc = new ColumnOrSuperColumn();
+cosc.setColumn(col);
+Mutation mutation = new Mutation();
+mutation.setColumn_or_supercolumn(cosc);
+List&lt;Mutation&gt; mutations = new ArrayList&lt;&gt;();
+mutations.add(mutation);
+Map&lt;String, List&lt;Mutation&gt;&gt; cf = new HashMap&lt;&gt;();
+cf.put("Standard1", mutations);
+Map&lt;ByteBuffer, Map&lt;String, List&lt;Mutation&gt;&gt;&gt; records = new HashMap&lt;&gt;();
+records.put(ByteBuffer.wrap("key".getBytes()), cf);
+client.batch_mutate(records, consistencyLevel);
+          </code></pre>
+          <ul>
+            <li>Not Developer Friendly.</li>
+            <li>Too Low Level</li>
+            <li>Hard to add new features (and maintain backward compatible).</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>CQL3</h2>
+          <p><u>C</u>assandra <u>Q</u>uery <u>L</u>anguage ver. <u>3</u></p>
+          <pre><code data-trim class="sql">
+CREATE KEYSPACE test_app WITH replication = {
+  'class': 'SimpleStrategy',
+  'replication_factor': 1
+};
+
+USE test_app;
+
+CREATE TABLE user (
+  id uuid PRIMARY KEY,
+  name text,
+  dept text
+);
+
+INSERT INTO user (id, name, dept) VALUES (410d0c8c-83d3-11e3-9d04-d1187852b5df, 'Yuki Morishita', 'Engineering');
+
+SELECT * FROM user WHERE id = 410d0c8c-83d3-11e3-9d04-d1187852b5df;
+          </code></pre>
+          <p>Sounds familiar?</p>
+        </section>
+
+        <section>
+          <h2>CQL3</h2>
+          <p>You can <code>CREATE INDEX</code>...</p>
+          <pre><code data-trim>
+CREATE INDEX dept_idx ON user (dept);
+SELECT * FROM user WHERE dept = 'Engineering';
+          </code></pre>
+
+          <p>You even can <code>CREATE USER</code> and <code>GRANT</code>/<code>REVOKE</code></p>
+          <pre><code data-trim>
+CREATE USER yukim WITH PASSWORD 'et3Em09s';
+GRANT SELECT ON test_app.user TO yukim;
+LIST USERS;
+          </code></pre>
+          <p style="font-size:0.5em;text-align:right">* need to setup PasswordAuthorizer/CassadnraAuthenticator in cassandra.yaml</p>
+        </section>
+
+        <section>
+          <h2>CQL3</h2>
+          <p>
+          It looks like SQL, but...
+          </p>
+          <ul>
+            <li>No <code>JOIN</code>s</li>
+            <li>No subqueries</li>
+            <li>No aggregation, yet (we have a plan)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>CQL3</h2>
+          <p>Built on top of Cassandra Storage Engine. <br>even Thrift API still works.</p>
+          <div><img src="images/CCJP2014-1.svg"></div>
+        </section>
+
+        <section>
+          <h2>Try CQL3</h2>
+          <p>You can try it through <code>cqlsh</code></p>
+          <pre><code data-trim class="profile">
+$ bin/cqlsh cass1
+Connected to Test Cluster at cass1:9160.
+[cqlsh 4.1.0 | Cassandra 2.0.4 | CQL spec 3.1.1 | Thrift protocol 19.39.0]
+Use HELP for help.
+cqlsh&gt; USE test_app;
+cqlsh:test_app&gt; SELECT * FROM user WHERE id = 410d0c8c-83d3-11e3-9d04-d1187852b5df;
+
+  id                                   | dept        | name
+ --------------------------------------+-------------+----------------
+  410d0c8c-83d3-11e3-9d04-d1187852b5df | Engineering | Yuki Morishita
+
+  (1 rows)
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Try CQL3</h2>
+          <p>
+          Need GUI? Try our <a href="http://datastax.com/devcenter">DataStax DevCenter</a>. It's FREE.
+          </p>
+          <div><img src="images/DevCenter1.png"></div>
+          <ul>
+            <li>Query auto complete</li>
+            <li>Schema/ResultSet browser</li>
+            <li>Supports both C* 1.2 and 2.0(with limited functionality)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h1 class="section_title">Writing Apps Using CQL3</h1>
+        </section>
+
+        <section>
+          <h2>Example: The App</h2>
+          <p>Music App</p>
+          <ul>
+            <li>Users can browse/edit album info</li>
+            <li>The app tracks and shows users' listening history</li>
+          </ul>
+          <div>
+            <img width="500px" height="400px"src="images/musicapp1.svg">
+            <img width="500px" height="400px"src="images/musicapp_hist1.svg">
+          </div>
+        </section>
+
+        <section>
+          <h2>Album Info</h2>
+          <p>"Users can browse the album info"</p>
+          <pre><code data-trim>
+CREATE TABLE album (
+  album_id uuid PRIMARY KEY,
+  album_title text,
+  artist text,
+  release_year int,
+  cover_image_url ascii
+);
+          </code></pre>
+          <p>UUID: Universal Unique ID / ID for distributed system</p>
+        </section>
+
+        <section>
+          <h2>Album Info with tags</h2>
+          <p>"Isn't is nice if users can put tags on each album?"</p>
+          <pre><code data-trim class="sql">
+ALTER TABLE album ADD tags set&lt;text&gt;;
+UPDATE album SET tags = tags + {'alternative', 'instrumental'} WHERE album_id = ...;
+          </code></pre>
+          <div><img width="600px" height="400px"src="images/musicapp2.svg"></div>
+        </section>
+
+        <section>
+          <h2>Collections</h2>
+          <p>CQL3 provides 3 types of collections</p>
+          <pre><code data-trim class="sql">
+-- Set
+UPDATE album SET tags = tags + {‘classical’} WHERE ...
+UPDATE album SET tags = tags - {‘blues’} WHERE ...
+
+-- List
+UPDATE list_example SET points = points + [20, 30] WHERE ...
+UPDATE list_example SET points = points - [100] WHERE ...
+
+-- Map
+UPDATE map_example SET attributes[‘ghi’] = ‘jkl’ WHERE ...
+DELETE attributes[‘abc’] FROM map_example WHERE ...
+          </code></pre>
+          <p>Be careful</p>
+          <ul>
+            <li>Requires serialization</li>
+            <li>No access to items in collection from CQL3</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Play History</h2>
+          <p>Data tied to a point of time = <b>"Time-series Data"</b></p>
+          <pre><code data-trim>
+CREATE TABLE play_history (
+  user_id uuid,
+  played_at timestamp,
+  album_title text,
+  song_title text,
+  PRIMARY KEY (user_id, played_at)
+);
+          </code></pre>
+          <ul>
+            <li>First part of PRIMARY KEY becomes "Partition Key"</li>
+            <li>Each event is a new "Cell" in a wide partition</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Time-series Data</h2>
+          <pre><code data-trim class="sql">
+PRIMARY KEY (user_id, played_at)
+          </code></pre>
+          <p>Partition Key</p>
+          <ul>
+            <li>1st part of <code>PRIMARY KEY</code> is used to distribute data.</li>
+          </ul>
+          <p>Clustering Column</p>
+          <ul>
+            <li>Within the same partition key, rows are physically ordered following the clustering columns</li>
+          </ul>
+          <p>Don't go too "wide". Use composite key for partition key</p>
+        </section>
+
+        <section>
+          <h2>Play History - Updated</h2>
+          <p>"We should display history the newest first."</p>
+          <ul>
+            <li>Use composite partition key to divide partition</li>
+            <li>Use <code>CLUSTERING ORDER BY</code> to specify order</li>
+          </ul>
+          <pre><code data-trim>
+CREATE TABLE play_history2 (
+  user_id uuid,
+  date_played text,
+  played_at timestamp,
+  album_title text,
+  song_title text,
+  PRIMARY KEY ((user_id, date_played), played_at)
+) WITH CLUSTERING ORDER BY (played_at DESC);
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Album Info Update</h2>
+          <p>"Hey, what will happen if two users try to update the same info?"</p>
+          <pre><code data-trim class="sql">
+ALTER TABLE album ADD version int;
+UPDATE album SET release_year = 2012, version = 2 WHERE album_id = ... IF version = 1;
+          </code></pre>
+          <p>With <code>IF</code>, Cassandra use PAXOS to ensure exclusive access.</p>
+        </section>
+
+        <section>
+          <h2>Light Weight Transaction</h2>
+          <p>PAXOS?</p>
+          <ul>
+            <li>For more info see our <a href="http://www.datastax.com/dev/blog/lightweight-transactions-in-cassandra-2-0">Dev Blog</a></li>
+            <li>Latency cost</li>
+            <li>Use for edge cases / Make sure to test performance</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2><code>CREATE INDEX</code> on collection</h2>
+          <p>"Can user search the album from tag name?"</p>
+          <pre><code data-trim>
+CREATE INDEX tag_idx ON album (tags);
+SELECT * FROM album WHERE tags CONTAINS 'rock';
+          </code></pre>
+        </section>
+
+        <section>
+          <h2><code>CREATE INDEX</code> on collection</h2>
+          <p>You can create index on keys instead for <code>map</code> type</p>
+          <pre><code data-trim>
+CREATE INDEX map_key_idx ON map_sample (KEYS(props));
+SELECT * FROM map_sample WHERE props CONTAINS KEY 'foo';
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>User-defined <code>TYPE</code>s</h2>
+          <p>"Show the list of songs along with the album info."</p>
+          <pre><code data-trim class="sql">
+CREATE TYPE song (
+  title text,
+  duration int
+);
+ALTER TABLE album ADD songs list&lt;song&gt;;
+UPDATE album SET songs = [{title: 'Starry Morning', duration: 52}, {title:...}];
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Data modeling resources:</h2>
+          <p>Document: <a href="http://www.datastax.com/documentation/cql/3.1/cql/cql_intro_c.html">http://www.datastax.com/documentation/cql/3.1/cql/cql_intro_c.html</a></p>
+          <br>
+          <p>Patrick McFadin's data modeling series:</p>
+          <ol>
+            <li>The Data Model is Dead; Long live the Data Model: <a href="http://www.youtube.com/watch?v=px6U2n74q3g">Video</a>, <a href="http://www.slideshare.net/patrickmcfadin/the-data-model-is-dead-long-live-the-data-model">Slides</a></li>
+            <li>Become a Super Modeler: <a href="http://www.youtube.com/watch?v=qphhxujn5Es">Video</a>, <a href="http://www.slideshare.net/patrickmcfadin/become-a-super-modeler">Slides</a></li>
+            <li>The World's Next Top Data Model: <a href="http://www.youtube.com/watch?v=HdJlsOZVGwM">Video</a>, <a href="http://www.slideshare.net/patrickmcfadin/the-worlds-next-top-data-model">Slides</a></li>
+            <li>Apache Cassandra 2.0: Data Model on Fire: <a href="http://www.youtube.com/watch?v=oUEKMcTsbfU">Video</a>, <a href="http://www.slideshare.net/planetcassandra/c-summit-eu-2013-apache-cassandra-20-data-model-on-fire">Slides</a></li>
+          </ol>
+        </section>
+
+        <section>
+          <h1 class="section_title">Accessing from your Java application</h1>
+        </section>
+
+        <section>
+          <h2>DataStax Java driver</h2>
+          <ul>
+            <li>Open source CQL3 driver for Java (Apache v2 Lisence)</li>
+            <li>Automatic routing of client requests</li>
+            <li>Connection pooling</li>
+            <li>Automatic failover</li>
+            <li>Metrics monitoring through JMX</li>
+            <li>Tunable policies
+              <ul>
+                <li>Load balancing</li>
+                <li>Reconnection</li>
+                <li>Consistency</li>
+              </ul>
+            </li>
+            <li>Prepared statements</li>
+            <li>Non blocking API</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>DataStax Java driver</h2>
+          <ul>
+            <li>Hosted at <a href="https://github.com/datastax/java-driver">https://github.com/datastax/java-driver</a></li>
+            <li>If you use maven:
+              <pre><code data-trim class="language-xml">
+&lt;dependency&gt;
+    &lt;groupId&gt;com.datastax.cassandra&lt;/groupId&gt;
+    &lt;artifactId&gt;cassandra-driver-core&lt;/artifactId&gt;
+    &lt;version&gt;2.0.1&lt;/version&gt;
+&lt;/dependency&gt;
+              </code></pre>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Connecting to cluster</h2>
+          <pre><code data-trim class="language-java">
+public void connect(String... nodes) 
+    // You can provide as many contact points
+    cluster = Cluster.builder()
+                     .addContactPoints(nodes)
+                     .build();
+    // Cluster holds metadata for connected cluster
+    Metadata metadata = cluster.getMetadata();
+    System.out.printf("Connected to cluster: %s\n", metadata.getClusterName());
+    for (Host host : metadata.getAllHosts()) {
+        System.out.printf("Datacenter: %s; Host: %s; Rack: %s\n",
+                          host.getDatacenter(), host.getAddress(), host.getRack());
+    }
+}
+public void close() {
+   // shutdonw to release resources
+   cluster.shutdown();
+}
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Executing CQL</h2>
+          <p>After connecting to cluster, create <code>Session</code> to execute CQL</p>
+          <pre><code data-trim class="language-java">
+Session session = cluster.connect("my_keyspace");
+// executre INSERT statement
+session.execute("INSERT INTO my_table (id, name) VALUES (" +
+                "756716f7-2e54-4715-9f00-91dcbea6cf50," +
+                "'Yuki Morishita'" +
+                ");");
+// or create prepared statement and bind variable
+PreparedStatement statement = session.prepare("INSERT INTO my_table (id, name) VALUES (?,?);");
+BoundStatement boundStmt = new BoundStatement(statement);
+session.execute(boundStmt.bind(UUID.fromString("756716f7-2e54-4715-9f00-91dcbea6cf50"),
+                               "Yuki Morishita"));
+
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Query builder</h2>
+          <p>Programaticly build your query</p>
+          <pre><code data-trim class="language-java">
+// INSERT
+Insert insert = QueryBuilder.insertInto("my_table")
+                            .value("id", UUID.fromString("756716f7-2e54-4715-9f00-91dcbea6cf50"))
+                            .value("name", "Yuki Morishita");
+session.execute(insert);
+
+// SELECT
+Query query = QueryBuilder.select().all().from(keyspace, table);
+ResultSet result = session.execute(query).getAll();
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Resources</h2>
+          <ul>
+            <li>Document: <a href="http://www.datastax.com/documentation/developer/java-driver/2.0/index.html">http://www.datastax.com/documentation/developer/java-driver/2.0/index.html</a></li>
+            <li>API: <a href="http://www.datastax.com/drivers/java/2.0/">http://www.datastax.com/drivers/java/2.0/</a></li>
+          </ul>
+        </section>
+
+        <section>
+          <h1 class="section_title">Questions?</h1>
+          <p>yuki@datastax.com</p>
+        </section>
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.min.js"></script>
+    <script>
+        Reveal.initialize({
+            width: 1280,
+            height: 720,
+            controls: false,
+            progress: true,
+            history: true,
+            center: false,
+
+            theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+            transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+            // Optional libraries used to extend on reveal.js
+            dependencies: [
+                { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+            ]
+        });
+    </script>
+  </body>
+</html>
