@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1775.1783"
+   height="704.79877"
+   id="svg7585"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="storage.svg"
+   inkscape:export-filename="/home/yuki/Developments/projects/jp_tour_2014/ca/storage.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs7587">
+    <marker
+       inkscape:stockid="Arrow1Send"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Send"
+       style="overflow:visible">
+      <path
+         id="path4576"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="465.13951"
+     inkscape:cy="446.31439"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1641"
+     inkscape:window-height="1742"
+     inkscape:window-x="12"
+     inkscape:window-y="42"
+     inkscape:window-maximized="0"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata7590">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-137.28906,-313.87781)">
+    <rect
+       style="fill:none;stroke:#ff7f2a;stroke-width:5.85895586;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect7612"
+       width="294.37589"
+       height="82.058273"
+       x="258.91217"
+       y="502.26508" />
+    <g
+       id="g8130"
+       transform="translate(67,305)">
+      <rect
+         y="197.3539"
+         x="506.34338"
+         height="81.880623"
+         width="284.39615"
+         id="rect8124"
+         style="fill:none;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0" />
+      <rect
+         style="fill:#ffeeaa;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect8128"
+         width="284.39615"
+         height="81.880623"
+         x="506.34338"
+         y="115.3539" />
+      <text
+         xml:space="preserve"
+         style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans;-inkscape-font-specification:Droid Sans"
+         x="552"
+         y="166.36218"
+         id="text8344"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan8346"
+           x="552"
+           y="166.36218">セル名</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans;-inkscape-font-specification:Droid Sans"
+         x="550"
+         y="248.36218"
+         id="text8348"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan8350"
+           x="550"
+           y="248.36218">値</tspan></text>
+    </g>
+    <g
+       id="g8134"
+       transform="translate(365,305)">
+      <rect
+         style="fill:none;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect8136"
+         width="284.39615"
+         height="81.880623"
+         x="506.34338"
+         y="197.3539" />
+      <rect
+         y="115.3539"
+         x="506.34338"
+         height="81.880623"
+         width="284.39615"
+         id="rect8138"
+         style="fill:#ffeeaa;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0" />
+    </g>
+    <g
+       transform="translate(663,305)"
+       id="g8140">
+      <rect
+         y="197.3539"
+         x="506.34338"
+         height="81.880623"
+         width="284.39615"
+         id="rect8142"
+         style="fill:none;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0" />
+      <rect
+         style="fill:#ffeeaa;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect8144"
+         width="284.39615"
+         height="81.880623"
+         x="506.34338"
+         y="115.3539" />
+    </g>
+    <g
+       id="g8146"
+       transform="translate(961,305)">
+      <rect
+         style="fill:none;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect8148"
+         width="284.39615"
+         height="81.880623"
+         x="506.34338"
+         y="197.3539" />
+      <rect
+         y="115.3539"
+         x="506.34338"
+         height="81.880623"
+         width="284.39615"
+         id="rect8150"
+         style="fill:#ffeeaa;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans;-inkscape-font-specification:Droid Sans"
+       x="404"
+       y="538.36218"
+       id="text8182"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan8184"
+         x="404"
+         y="538.36218">パーティション</tspan><tspan
+         sodipodi:role="line"
+         x="404"
+         y="573.36218"
+         id="tspan8186">キー</tspan></text>
+    <rect
+       style="fill:none;stroke:#ff7f2a;stroke-width:5.85895586;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect7612-0"
+       width="294.37589"
+       height="82.058273"
+       x="259.91223"
+       y="692.75916" />
+    <g
+       id="g8130-2"
+       transform="translate(68,495.49406)">
+      <rect
+         y="197.3539"
+         x="506.34338"
+         height="81.880623"
+         width="284.39615"
+         id="rect8124-2"
+         style="fill:none;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0" />
+      <rect
+         style="fill:#ffeeaa;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect8128-9"
+         width="284.39615"
+         height="81.880623"
+         x="506.34338"
+         y="115.3539" />
+    </g>
+    <g
+       id="g8134-9"
+       transform="translate(366,495.49406)">
+      <rect
+         style="fill:none;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect8136-2"
+         width="284.39615"
+         height="81.880623"
+         x="506.34338"
+         y="197.3539" />
+      <rect
+         y="115.3539"
+         x="506.34338"
+         height="81.880623"
+         width="284.39615"
+         id="rect8138-3"
+         style="fill:#ffeeaa;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0" />
+    </g>
+    <g
+       transform="translate(664,495.49406)"
+       id="g8140-0">
+      <rect
+         y="197.3539"
+         x="506.34338"
+         height="81.880623"
+         width="284.39615"
+         id="rect8142-6"
+         style="fill:none;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0" />
+      <rect
+         style="fill:#ffeeaa;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect8144-0"
+         width="284.39615"
+         height="81.880623"
+         x="506.34338"
+         y="115.3539" />
+    </g>
+    <g
+       id="g8146-7"
+       transform="translate(962,495.49406)">
+      <rect
+         style="fill:none;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect8148-2"
+         width="284.39615"
+         height="81.880623"
+         x="506.34338"
+         y="197.3539" />
+      <rect
+         y="115.3539"
+         x="506.34338"
+         height="81.880623"
+         width="284.39615"
+         id="rect8150-6"
+         style="fill:#ffeeaa;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans;-inkscape-font-specification:Droid Sans"
+       x="405"
+       y="728.85626"
+       id="text8182-0"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan8184-0"
+         x="405"
+         y="728.85626">パーティション</tspan><tspan
+         sodipodi:role="line"
+         x="405"
+         y="763.85626"
+         id="tspan8186-4">キー</tspan></text>
+    <rect
+       style="fill:none;stroke:#808080;stroke-width:3.89461946;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:3.8946194, 7.78923879;stroke-dashoffset:0"
+       id="rect7614-7"
+       width="1673.0402"
+       height="106.17387"
+       x="235.47998"
+       y="680.76929" />
+    <text
+       xml:space="preserve"
+       style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans;-inkscape-font-specification:Droid Sans"
+       x="1793"
+       y="754.85626"
+       id="text8178-2"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan8180-8"
+         x="1793"
+         y="754.85626">...</tspan></text>
+    <rect
+       style="fill:none;stroke:#ff7f2a;stroke-width:5.85895586;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect7612-0-4"
+       width="294.37589"
+       height="82.058273"
+       x="261.91217"
+       y="881.75916" />
+    <g
+       id="g8130-2-5"
+       transform="translate(69.99994,684.49407)">
+      <rect
+         y="197.3539"
+         x="506.34338"
+         height="81.880623"
+         width="284.39615"
+         id="rect8124-2-8"
+         style="fill:none;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0" />
+      <rect
+         style="fill:#ffeeaa;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect8128-9-4"
+         width="284.39615"
+         height="81.880623"
+         x="506.34338"
+         y="115.3539" />
+    </g>
+    <g
+       id="g8134-9-6"
+       transform="translate(367.99994,684.49407)">
+      <rect
+         style="fill:none;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect8136-2-8"
+         width="284.39615"
+         height="81.880623"
+         x="506.34338"
+         y="197.3539" />
+      <rect
+         y="115.3539"
+         x="506.34338"
+         height="81.880623"
+         width="284.39615"
+         id="rect8138-3-4"
+         style="fill:#ffeeaa;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0" />
+    </g>
+    <g
+       transform="translate(665.99994,684.49407)"
+       id="g8140-0-8">
+      <rect
+         y="197.3539"
+         x="506.34338"
+         height="81.880623"
+         width="284.39615"
+         id="rect8142-6-0"
+         style="fill:none;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0" />
+      <rect
+         style="fill:#ffeeaa;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect8144-0-3"
+         width="284.39615"
+         height="81.880623"
+         x="506.34338"
+         y="115.3539" />
+    </g>
+    <g
+       id="g8146-7-8"
+       transform="translate(963.99994,684.49407)">
+      <rect
+         style="fill:none;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+         id="rect8148-2-7"
+         width="284.39615"
+         height="81.880623"
+         x="506.34338"
+         y="197.3539" />
+      <rect
+         y="115.3539"
+         x="506.34338"
+         height="81.880623"
+         width="284.39615"
+         id="rect8150-6-5"
+         style="fill:#ffeeaa;stroke:#808080;stroke-width:6.02813196;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans;-inkscape-font-specification:Droid Sans"
+       x="406.99994"
+       y="917.85626"
+       id="text8182-0-0"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan8184-0-1"
+         x="406.99994"
+         y="917.85626">パーティション</tspan><tspan
+         sodipodi:role="line"
+         x="406.99994"
+         y="952.85626"
+         id="tspan8186-4-4">キー</tspan></text>
+    <rect
+       style="fill:none;stroke:#808080;stroke-width:3.89461946;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:3.8946194, 7.78923879;stroke-dashoffset:0"
+       id="rect7614-7-2"
+       width="1673.0402"
+       height="106.17387"
+       x="237.47992"
+       y="869.76929" />
+    <text
+       xml:space="preserve"
+       style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans;-inkscape-font-specification:Droid Sans"
+       x="1794.9999"
+       y="943.85626"
+       id="text8178-2-6"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan8180-8-9"
+         x="1794.9999"
+         y="943.85626">...</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text8332"
+       y="-980.11707"
+       x="995.28595"
+       style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans;-inkscape-font-specification:Droid Sans"
+       xml:space="preserve"
+       transform="matrix(0,1,-1,0,0,0)"><tspan
+         y="-980.11707"
+         x="995.28595"
+         id="tspan8334"
+         sodipodi:role="line">...</tspan></text>
+    <text
+       transform="matrix(0,1,-1,0,0,0)"
+       xml:space="preserve"
+       style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans;-inkscape-font-specification:Droid Sans"
+       x="995.28595"
+       y="-1084.1171"
+       id="text8336"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan8338"
+         x="995.28595"
+         y="-1084.1171">...</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text8340"
+       y="-1190.1171"
+       x="995.28595"
+       style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans;-inkscape-font-specification:Droid Sans"
+       xml:space="preserve"
+       transform="matrix(0,1,-1,0,0,0)"><tspan
+         y="-1190.1171"
+         x="995.28595"
+         id="tspan8342"
+         sodipodi:role="line">...</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans;-inkscape-font-specification:Droid Sans"
+       x="239"
+       y="473.36218"
+       id="text8352"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan8354"
+         x="239"
+         y="473.36218">パーティション</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Send)"
+       d="m 196,468.36218 0,515"
+       id="path8542"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Send)"
+       d="m 564,363.36218 1164,0"
+       id="path8548"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans;-inkscape-font-specification:Droid Sans"
+       x="571"
+       y="340.36218"
+       id="text8914"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan8916"
+         x="571"
+         y="340.36218">セル名でソート</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans;-inkscape-font-specification:Droid Sans"
+       x="568"
+       y="407.36218"
+       id="text8918"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan8920"
+         x="568"
+         y="407.36218"
+         style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Droid Sans;-inkscape-font-specification:Droid Sans">セル(Cell)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans;-inkscape-font-specification:Droid Sans"
+       x="-924.96375"
+       y="163.46094"
+       id="text8922"
+       sodipodi:linespacing="125%"
+       transform="matrix(0,-1,1,0,0,0)"><tspan
+         sodipodi:role="line"
+         id="tspan8924"
+         x="-924.96375"
+         y="163.46094">パーティションキーでソート</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="partition"
+     transform="translate(-137.28906,-341.51562)">
+    <rect
+       style="fill:none;stroke:#808080;stroke-width:3.89461946;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:3.8946194, 7.78923879;stroke-dashoffset:0"
+       id="rect7614"
+       width="1673.0402"
+       height="106.17387"
+       x="234.47992"
+       y="517.91309" />
+    <text
+       xml:space="preserve"
+       style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Droid Sans;-inkscape-font-specification:Droid Sans"
+       x="1792"
+       y="592"
+       id="text8178"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan8180"
+         x="1792"
+         y="592">...</tspan></text>
+  </g>
+</svg>

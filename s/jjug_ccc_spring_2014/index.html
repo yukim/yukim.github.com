@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>JavaではじめるApache Cassandra</title>
+    <meta name="description" content="CQL3 data modeling slide for Austin JUG 3/25/2014">
+    <meta name="author" content="Yuki Morishita">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/theme/simple.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+    document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+        <section>
+          <h1><span style="font-size: smaller">Javaではじめる</span><br>Apache Cassandra</h1>
+          <p>森下 雄貴</p>
+          <p><small>Apache Cassandra コミッター / Software Developer @ DataStax</small></p>
+          <aside class="notes"></aside>
+        </section>
+
+        <section>
+          <h2>森下 雄貴</h2>
+          <p>
+            <span class="fa fa-twitter"></span><span class="fa fa-github"> @yukim</span>
+          </p>
+          <div style="text-align:left; padding-left:2em;">
+            Software Developer @ DataStax, Inc.
+            <p>
+            2012年5月よりApache Cassandraコミッター。
+            <p>
+            テキサス州オースティン在住
+            <p>
+            前職では東京のSIerでITアーキテクト的な仕事をしていました。
+          </div>
+          <aside class="notes"></aside>
+        </section>
+
+        <section>
+          <h2>Apache Cassandraは誕生から5年</h2>
+          <div>
+            <img src="images/timeline.png">
+          </div>
+        </section>
+
+        <section data-transition="none" data-background="images/cassandra-users-2014-01-13.png">
+        </section>
+
+        <section>
+          <h2>Apache Cassandraの利用事例</h2>
+          <p>
+          <ul>
+            <li>データ量の増加への対応<br>(e.g. CERN hadron collider, Barracuda Networks)</li>
+            <li>時系列データの超高速書き込み<br>(e.g. BlueMountain Capital – フィナンシャルデータの分析)</li>
+            <li>アベイラビリティ<br>
+           (e.g. eBay, Eventbrite, Netﬂix, GoDaddy, Sony Entertainment Network)</li>
+          </ul>
+          </p>
+        </section>
+
+        <section>
+          <h2>Apache Cassandraの特徴</h2>
+          <p>
+          <ul>
+            <li>スケーラビリティ</li>
+            <li>ハイパフォーマンス</li>
+            <li>アベイラビリティ - "Always On"</li>
+            <li>+ 開発のしやすさ</li>
+          </ul>
+          </p>
+        </section>
+
+        <section>
+          <h2>Apache Cassandra クラスタ</h2>
+          <p>
+            <ul>
+              <li>P2Pの分散システム</li>
+              <li>パーティションキーに基づいてデータを分散保持</li>
+              <li>マスターレス(単一障害点なし)。すべてのノードが同じ役割</li>
+              <li>データは複数のノードに保持(レプリケーション)</li>
+              <li>柔軟なレプリケーション戦略</li>
+            </ul>
+          </p>
+          <p>
+            <img src="images/ring.svg">
+          </p>
+        </section>
+
+        <section>
+          <h2>マルチデータセンター対応</h2>
+          <p>
+            <img src="images/cross-dc.svg">
+          </p>
+        </section>
+
+        <section>
+          <h2>リニアスケーラビリティ</h2>
+          <p>
+            <img src="images/vldb.png">
+          </p>
+http://vldb.org/pvldb/vol5/p1724_tilmannrabl_vldb2012.pdf
+        </section>
+
+        <section>
+          <h2>データの書き込み</h2>
+          <p>
+            <img src="images/write.svg">
+          </p>
+        </section>
+
+        <section>
+          <h2>データの読み出し</h2>
+          <p>
+            <img src="images/read.svg">
+          </p>
+        </section>
+
+        <section>
+          <h2>ストレージモデル</h2>
+          <p>
+            <ul>
+              <li>BigTableのColumnFamilyがベース</li>
+              <li>時系列データと相性がよい</li>
+            </ul>
+          </p>
+          <p>
+            <img src="images/storage.svg">
+          </p>
+        </section>
+
+        <section>
+          <h2>+ 開発のしやすさ</h2>
+          <h3>CQL3</h3>
+          <aside class="notes"></aside>
+        </section>
+
+        <section>
+          <h2>Thrift RPC API</h2>
+          <ul>
+            <li>元々Cassandraが提供しているデータアクセス方法</li>
+            <li>ストレージエンジンを直接さわるイメージ</li>
+          </ul>
+          <pre><code data-trim class="java">
+Column col = new Column(ByteBuffer.wrap("name".getBytes()));
+col.setValue(ByteBuffer.wrap("value".getBytes()));
+col.setTimestamp(System.currentTimeMillis());
+ColumnOrSuperColumn cosc = new ColumnOrSuperColumn();
+cosc.setColumn(col);
+Mutation mutation = new Mutation();
+mutation.setColumn_or_supercolumn(cosc);
+List&lt;Mutation&gt; mutations = new ArrayList&lt;&gt;();
+mutations.add(mutation);
+Map&lt;String, List&lt;Mutation&gt;&gt; cf = new HashMap&lt;&gt;();
+cf.put("Standard1", mutations);
+Map&lt;ByteBuffer, Map&lt;String, List&lt;Mutation&gt;&gt;&gt; records = new HashMap&lt;&gt;();
+records.put(ByteBuffer.wrap("key".getBytes()), cf);
+client.batch_mutate(records, consistencyLevel);
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>CQL3</h2>
+          <p><u>C</u>assandra <u>Q</u>uery <u>L</u>anguage ver. <u>3</u></p>
+          <pre><code data-trim class="sql">
+CREATE KEYSPACE test_app WITH replication = {
+  'class': 'SimpleStrategy',
+  'replication_factor': 1
+};
+
+USE test_app;
+
+CREATE TABLE user (
+  id uuid PRIMARY KEY,
+  name text,
+  dept text
+);
+
+INSERT INTO user (id, name, dept) VALUES (410d0c8c-83d3-11e3-9d04-d1187852b5df, 'Yuki Morishita', 'Engineering');
+
+SELECT * FROM user WHERE id = 410d0c8c-83d3-11e3-9d04-d1187852b5df;
+          </code></pre>
+          <p>SQLにそっくり</p>
+        </section>
+
+        <section>
+          <h2>CQL3</h2>
+          <p>インデックスを作ったり</p>
+          <pre><code data-trim>
+CREATE INDEX dept_idx ON user (dept);
+SELECT * FROM user WHERE dept = 'Engineering';
+          </code></pre>
+
+          <p><code>CREATE USER</code> や <code>GRANT</code>/<code>REVOKE</code> もできます</p>
+          <pre><code data-trim>
+CREATE USER yukim WITH PASSWORD 'et3Em09s';
+GRANT SELECT ON test_app.user TO yukim;
+LIST USERS;
+          </code></pre>
+          <p style="font-size:0.5em;text-align:right">* cassandra.yamlでPasswordAuthorizer/CassadnraAuthenticatorを設定</p>
+        </section>
+
+        <section>
+          <h2>CQL3</h2>
+          <p>
+          SQLに似てはいるものの
+          </p>
+          <p>
+            <ul>
+              <li><code>JOIN</code></li>
+              <li>副問い合わせ</li>
+              <li>集計関数</li>
+            </ul>
+          </p>
+          <p>はありません</p>
+        </section>
+
+        <section>
+          <h2>CQL3</h2>
+          <p>CQL3はCassandraストレージエンジンの上に作られています。</p>
+          <div><img src="images/CCJP2014-1.svg"></div>
+        </section>
+
+        <section>
+          <h2>CQL3をさわってみる</h2>
+          <p>Apache Cassandra標準のCQLツール <code>cqlsh</code></p>
+          <pre><code data-trim class="profile">
+$ bin/cqlsh cass1
+Connected to Test Cluster at cass1:9160.
+[cqlsh 4.1.0 | Cassandra 2.0.4 | CQL spec 3.1.1 | Thrift protocol 19.39.0]
+Use HELP for help.
+cqlsh&gt; USE test_app;
+cqlsh:test_app&gt; SELECT * FROM user WHERE id = 410d0c8c-83d3-11e3-9d04-d1187852b5df;
+
+  id                                   | dept        | name
+ --------------------------------------+-------------+----------------
+  410d0c8c-83d3-11e3-9d04-d1187852b5df | Engineering | Yuki Morishita
+
+  (1 rows)
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>CQL3を使ったデータモデリング</h2>
+        </section>
+
+        <section>
+          <h2>例: 音楽アプリ</h2>
+          <ul>
+            <li>ユーザーはアルバムの情報を作成/編集できる</li>
+          </ul>
+          <div>
+            <img width="500px" height="400px"src="images/musicapp1.svg">
+          </div>
+        </section>
+
+        <section>
+          <h2>アルバム情報</h2>
+          <pre><code data-trim>
+CREATE TABLE album (
+  album_id uuid PRIMARY KEY,
+  album_title text,
+  artist text,
+  release_year int,
+  cover_image_url ascii
+);
+          </code></pre>
+          <p>UUID: 分散システムで一意に情報を識別するID</p>
+        </section>
+
+        <section>
+          <h2>アルバムへのタグ付け</h2>
+          <pre><code data-trim class="sql">
+ALTER TABLE album ADD tags set&lt;text&gt;;
+UPDATE album SET tags = tags + {'alternative', 'instrumental'} WHERE album_id = ...;
+          </code></pre>
+          <div><img width="600px" height="400px"src="images/musicapp2.svg"></div>
+        </section>
+
+        <section>
+          <h2>Collections</h2>
+          <p>CQL3には3つのコレクション型があります</p>
+          <pre><code data-trim class="sql">
+-- Set
+UPDATE album SET tags = tags + {‘classical’} WHERE ...
+UPDATE album SET tags = tags - {‘blues’} WHERE ...
+
+-- List
+UPDATE list_example SET points = points + [20, 30] WHERE ...
+UPDATE list_example SET points = points - [100] WHERE ...
+
+-- Map
+UPDATE map_example SET attributes[‘ghi’] = ‘jkl’ WHERE ...
+DELETE attributes[‘abc’] FROM map_example WHERE ...
+          </code></pre>
+          <p>注意点</p>
+          <ul>
+            <li>現状、すべてのコレクションを一括でシリアライズ</li>
+            <li>CQL3では個別の要素にアクセスできない</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Javaアプリからのアクセス</h2>
+        </section>
+
+        <section>
+          <h2>Cassandraドライバーの選択</h2>
+          <p style="text-align:left;">
+          従来からCassanraはThrift APIをラップしたライブラリが複数開発された(Hector, Astynaxなど)
+          RPCを特徴とするThrift APIの限界から、CQL3のバイナリプロトコルが開発される(Cassandra 1.2)
+          </p>
+          <ul>
+            <li>非同期通信のサポート</li>
+            <li>サーバープッシュ</li>
+            <li>ページング</li>
+            <li>その他新機能を追加しやすい</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>DataStax Java driver</h2>
+          <ul>
+            <li>Apache2ライセンスのオープンソースドライバ</li>
+            <li>クライアントからのリクエストを自動でルーティング</li>
+            <li>コネクションプーリング</li>
+            <li>自動フェイルオーバー</li>
+            <li>JMXによるモニタリング</li>
+            <li>プリペアドステートメント</li>
+            <li>ノンブロッキングAPI</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>DataStax Java driver</h2>
+          <ul>
+            <li><a href="https://github.com/datastax/java-driver">https://github.com/datastax/java-driver</a></li>
+            <li>Maven:
+              <pre><code data-trim class="language-xml">
+&lt;dependency&gt;
+    &lt;groupId&gt;com.datastax.cassandra&lt;/groupId&gt;
+    &lt;artifactId&gt;cassandra-driver-core&lt;/artifactId&gt;
+    &lt;version&gt;2.0.1&lt;/version&gt;
+&lt;/dependency&gt;
+              </code></pre>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>クラスタへ接続する</h2>
+          <pre><code data-trim class="language-java">
+public void connect(String... nodes) 
+    // 最初に接続するアドレスを(複数)指定して接続
+    cluster = Cluster.builder()
+                     .addContactPoints(nodes)
+                     .build();
+    // クラスタのメタ情報を取得
+    Metadata metadata = cluster.getMetadata();
+    System.out.printf("Connected to cluster: %s\n", metadata.getClusterName());
+    for (Host host : metadata.getAllHosts()) {
+        System.out.printf("Datacenter: %s; Host: %s; Rack: %s\n",
+                          host.getDatacenter(), host.getAddress(), host.getRack());
+    }
+}
+public void close() {
+   // クラスタへの接続をすべてシャットダウン
+   cluster.shutdown();
+}
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>CQLの実行</h2>
+          <p><code>Session</code>オブジェクトを取得してCQLを実行</p>
+          <pre><code data-trim class="language-java">
+Session session = cluster.connect("my_keyspace");
+// INSERT文の実行
+session.execute("INSERT INTO my_table (id, name) VALUES (" +
+                "756716f7-2e54-4715-9f00-91dcbea6cf50," +
+                "'Yuki Morishita'" +
+                ");");
+// プリペアドステートメントバージョン
+PreparedStatement statement = session.prepare("INSERT INTO my_table (id, name) VALUES (?,?);");
+BoundStatement boundStmt = new BoundStatement(statement);
+session.execute(boundStmt.bind(UUID.fromString("756716f7-2e54-4715-9f00-91dcbea6cf50"),
+                               "Yuki Morishita"));
+
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>QueryBuilder</h2>
+          <p>CQL文を直接書くのではなく、プログラムで組み立て</p>
+          <pre><code data-trim class="language-java">
+// INSERT
+Insert insert = QueryBuilder.insertInto("my_table")
+                            .value("id", UUID.fromString("756716f7-2e54-4715-9f00-91dcbea6cf50"))
+                            .value("name", "Yuki Morishita");
+session.execute(insert);
+
+// SELECT
+Query query = QueryBuilder.select().all().from(keyspace, table);
+ResultSet result = session.execute(query).getAll();
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>ドキュメント</h2>
+          <ul>
+            <li>Document: <a href="http://www.datastax.com/documentation/developer/java-driver/2.0/index.html">http://www.datastax.com/documentation/developer/java-driver/2.0/index.html</a></li>
+            <li>API: <a href="http://www.datastax.com/drivers/java/2.0/">http://www.datastax.com/drivers/java/2.0/</a></li>
+          </ul>
+        </section>
+
+        <section>
+          <h1 class="section_title">Questions?</h1>
+          <p>yuki@datastax.com</p>
+        </section>
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.min.js"></script>
+    <script>
+        Reveal.initialize({
+            width: 1280,
+            height: 720,
+            controls: false,
+            progress: true,
+            history: true,
+            center: false,
+
+            theme: 'simple',
+            transition: 'none',
+
+            // Optional libraries used to extend on reveal.js
+            dependencies: [
+                { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+            ]
+        });
+    </script>
+  </body>
+</html>
