@@ -53,12 +53,29 @@
 
         <section>
           <h2>Apache Cassandraは誕生から5年</h2>
+          <p>
+            <ul>
+              <li>Javaでかかれた分散データベース</li>
+              <li>Amazon Dynamo + Google Bigtable</li>
+              <li>Facebookがオープンソース化、その後Apacheソフトウェア財団へ寄贈</li>
+            </ul>
+          </p>
           <div>
             <img src="images/timeline.png">
           </div>
         </section>
 
         <section data-transition="none" data-background="images/cassandra-users-2014-01-13.png">
+        </section>
+
+        <section>
+          <h2>Apache Cassandra</h2>
+          <p>
+          <ul>
+            <li>Javaでかかれた分散データベース</li>
+            <li>Amazon Dynamo + Google Bigtable</li>
+          </ul>
+          </p>
         </section>
 
         <section>
@@ -315,6 +332,15 @@ DELETE attributes[‘abc’] FROM map_example WHERE ...
         </section>
 
         <section>
+          <h2>その他の機能</h2>
+          <ul>
+            <li>Lightweight Transaction<br>PAXOSプロトコルを用いてデータ更新の競合を防ぐ</li>
+            <li>staticカラム<br>各行にまたがって共通のカラムを定義する</li>
+            <li>ユーザー定義型(v2.1から)<br>使い回し可能な型を定義可能(例: address)</li>
+          </ul>
+        </section>
+
+        <section>
           <h2>Javaアプリからのアクセス</h2>
         </section>
 
@@ -336,6 +362,7 @@ DELETE attributes[‘abc’] FROM map_example WHERE ...
           <h2>DataStax Java driver</h2>
           <ul>
             <li>Apache2ライセンスのオープンソースドライバ</li>
+            <li>CQL3バイナリプロトコル対応</li>
             <li>クライアントからのリクエストを自動でルーティング</li>
             <li>コネクションプーリング</li>
             <li>自動フェイルオーバー</li>
