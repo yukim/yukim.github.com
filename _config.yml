@@ -3,8 +3,9 @@ timezone: America/Chicago
 permalink: /blog/:year/:month/:day/:title.html
 paginate: 10
 safe: true
+gems: [jekyll-paginate]
 
-name: m7a.me
+name: yukim.github.io
 avatar: http://www.gravatar.com/avatar/ffcf9f584fc64efc28d08537123c2fa5
 accounts:
     twitter: yukim

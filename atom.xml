@@ -1,13 +1,13 @@
 ---
-layout: nil
+layout: null
 ---
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>m7a.me</title>
-  <link href="http://m7a.me/"/>
-  <link type="application/atom+xml" rel="self" href="http://m7a.me/atom.xml"/>
+  <title>yukim.github.io</title>
+  <link href="http://yukim.github.io/"/>
+  <link type="application/atom+xml" rel="self" href="http://yukim.github.io/atom.xml"/>
   <updated>{{ site.time | date_to_xmlschema }}</updated>
-  <id>http://m7a.me/</id>
+  <id>http://yukim.github.io/</id>
   <author>
     <name>Yuki Morishita</name>
     <email>mor.yuki@gmail.com</email>
@@ -15,8 +15,8 @@ layout: nil
 
   {% for post in site.posts %}
   <entry>
-    <id>http://m7a.me{{ post.id }}</id>
-    <link type="text/html" rel="alternate" href="http://m7a.me{{ post.url }}"/>
+    <id>http://yukim.github.io{{ post.id }}</id>
+    <link type="text/html" rel="alternate" href="http://yukim.github.io{{ post.url }}"/>
     <title>{{ post.title }}</title>
     <published>{{ post.date | date_to_xmlschema }}</published>
     <updated>{{ post.date | date_to_xmlschema }}</updated>
